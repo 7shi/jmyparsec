@@ -15,7 +15,7 @@ public class Parsers {
 
     public static final Parser<Character> anyChar = satisfy(s -> true);  // 変更
 
-    public static Parser<Character> satisfy(Function<Character, Boolean> f) {
+    public static final Parser<Character> satisfy(Function<Character, Boolean> f) {
         return s -> {
             char ch = s.peek();
             if (!f.apply(ch)) {
