@@ -7,7 +7,10 @@ public class Source {
         this.s = s;
     }
 
-    public final char peek() {
+    public final char peek() throws Exception {
+        if (s.isEmpty()) {
+            throw new Exception("too short");
+        }
         return s.charAt(0);
     }
 
