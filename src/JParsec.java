@@ -1,11 +1,9 @@
 
-import java.util.function.Function;
-
 public class JParsec {
 
-    public static <T> void parseTest(Function<Source, T> p, String src) {  // 追加
+    public static <T> void parseTest(Parser<T> p, String src) {  // 使用箇所
         Source s = new Source(src);
-        System.out.println(p.apply(s));
+        System.out.println(p.parse(s));
     }
 
     public static char anyChar(Source s) {
