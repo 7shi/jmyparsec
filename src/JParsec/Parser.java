@@ -1,3 +1,4 @@
+package JParsec;
 
 @FunctionalInterface
 public interface Parser<T> {
