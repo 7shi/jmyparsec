@@ -6,27 +6,27 @@ public class JParsec {
         System.out.println(p.parse(s));
     }
 
-    public static char anyChar(Source s) {
+    public static final Parser<Character> anyChar = s -> {  // ラムダ式化
         char ret = s.peek();
         s.next();
         return ret;
-    }
+    };                                                      // セミコロン
 
-    public static String test1(Source s) {
-        char x1 = anyChar(s);
-        char x2 = anyChar(s);
+    public static final Parser<String> test1 = s -> {       // ラムダ式化
+        char x1 = anyChar.parse(s);                         // .parse
+        char x2 = anyChar.parse(s);                         // .parse
         return new String(new char[]{x1, x2});
-    }
+    };                                                      // セミコロン
 
-    public static String test2(Source s) {
-        String x1 = test1(s);
-        char x2 = anyChar(s);
+    public static final Parser<String> test2 = s -> {       // ラムダ式化
+        String x1 = test1.parse(s);                         // .parse
+        char x2 = anyChar.parse(s);                         // .parse
         return x1 + x2;
-    }
+    };                                                      // セミコロン
 
     public static void main(String[] args) {
-        parseTest(JParsec::anyChar, "abc");
-        parseTest(JParsec::test1, "abc");
-        parseTest(JParsec::test2, "abc");
+        parseTest(anyChar, "abc");  // 単純化
+        parseTest(test1, "abc");    // 単純化
+        parseTest(test2, "abc");    // 単純化
     }
 }
