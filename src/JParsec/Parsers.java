@@ -25,4 +25,8 @@ public class Parsers {
             return ch;
         };
     }
+
+    public static final Parser<Character> char1(char ch) {
+        return satisfy(c -> c == ch);
+    }
 }
