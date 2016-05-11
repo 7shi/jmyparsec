@@ -1,7 +1,7 @@
 
 import java.util.function.Function;
 
-public class JParsec {
+public class Test {
 
     public static <T> void parseTest(Parser<T> p, String src) {
         Source s = new Source(src);
@@ -12,13 +12,9 @@ public class JParsec {
         }
     }
 
-    public static final Parser<Character> anyChar = s -> {
-        char ret = s.peek();
-        s.next();
-        return ret;
-    };
+    public static final Parser<Character> anyChar = satisfy(s -> true);  // 変更
 
-    public static Parser<Character> satisfy(Function<Character, Boolean> f) {  // 追加
+    public static Parser<Character> satisfy(Function<Character, Boolean> f) {
         return s -> {
             char ch = s.peek();
             if (!f.apply(ch)) {
@@ -30,7 +26,6 @@ public class JParsec {
     }
 
     public static void main(String[] args) {
-        parseTest(satisfy(Character::isDigit), "abc");  // NG
-        parseTest(satisfy(Character::isDigit), "123");
+        parseTest(anyChar, "abc");
     }
 }
