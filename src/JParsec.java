@@ -1,11 +1,13 @@
 
+import java.util.function.Function;
+
 public class JParsec {
 
     public static <T> void parseTest(Parser<T> p, String src) {
         Source s = new Source(src);
         try {
             System.out.println(p.parse(s));
-        } catch (Exception e) {  // 例外処理
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -16,20 +18,19 @@ public class JParsec {
         return ret;
     };
 
-    public static final Parser<String> test1 = s -> {
-        char x1 = anyChar.parse(s);
-        char x2 = anyChar.parse(s);
-        return new String(new char[]{x1, x2});
-    };
-
-    public static final Parser<String> test2 = s -> {
-        String x1 = test1.parse(s);
-        char x2 = anyChar.parse(s);
-        return x1 + x2;
-    };
+    public static Parser<Character> satisfy(Function<Character, Boolean> f) {  // 追加
+        return s -> {
+            char ch = s.peek();
+            if (!f.apply(ch)) {
+                throw new Exception("not satisfy");
+            }
+            s.next();
+            return ch;
+        };
+    }
 
     public static void main(String[] args) {
-        parseTest(test2, "12");  // 文字数不足
-        parseTest(test2, "123");
+        parseTest(satisfy(Character::isDigit), "abc");  // NG
+        parseTest(satisfy(Character::isDigit), "123");
     }
 }
