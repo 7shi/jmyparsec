@@ -1,5 +1,12 @@
 
+import java.util.function.Function;
+
 public class JParsec {
+
+    public static <T> void parseTest(Function<Source, T> p, String src) {  // 追加
+        Source s = new Source(src);
+        System.out.println(p.apply(s));
+    }
 
     public static char anyChar(Source s) {
         char ret = s.peek();
@@ -13,18 +20,15 @@ public class JParsec {
         return new String(new char[]{x1, x2});
     }
 
-    public static String test2(Source s) {  // 追加
+    public static String test2(Source s) {
         String x1 = test1(s);
         char x2 = anyChar(s);
         return x1 + x2;
     }
 
     public static void main(String[] args) {
-        Source s1 = new Source("abc");
-        System.out.println(anyChar(s1));
-        Source s2 = new Source("abc");
-        System.out.println(test1(s2));
-        Source s3 = new Source("abc");
-        System.out.println(test2(s3));
+        parseTest(JParsec::anyChar, "abc");
+        parseTest(JParsec::test1, "abc");
+        parseTest(JParsec::test2, "abc");
     }
 }
