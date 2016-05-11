@@ -1,14 +1,14 @@
 
 public class JParsec {
 
-    public static char anyChar(String[] s) {
-        char ret = s[0].charAt(0);
-        s[0] = s[0].substring(1);
+    public static char anyChar(Source s) {
+        char ret = s.peek();
+        s.next();
         return ret;
     }
 
     public static void main(String[] args) {
-        String[] s = {"abc"};
+        Source s = new Source("abc");
         System.out.println(anyChar(s));
         System.out.println(anyChar(s));
     }
