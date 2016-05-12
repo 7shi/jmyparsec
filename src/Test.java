@@ -1,5 +1,4 @@
 
-import java.util.Arrays;
 import java.util.List;
 import jmyparsec.*;
 import static jmyparsec.Parsers.*;
@@ -7,18 +6,23 @@ import static jmyparsec.Parsers.*;
 public class Test {
 
     static final Parser<Integer> number = s -> {
-        return Integer.parseInt(many1(digit).parse(s));
+        return Integer.parseInt(many1(digit).parseToString(s));
     };
 
-    static final Parser<List<Integer>> expr = s -> {  // 追加
+    static final Parser<List<Integer>> expr = s -> {
         int x = number.parse(s);
-        char1('+').parse(s);
-        int y = number.parse(s);
-        return Arrays.asList(x, y);
+        List<Integer> xs = many(ss -> {
+            char1('+').parse(ss);
+            return number.parse(ss);
+        }).parse(s);
+        xs.add(0, x);  // 連結
+        return xs;
     };
 
     public static void main(String[] args) {
-        parseTest(number, "123");
-        parseTest(expr  , "1+2");  // 追加
+        parseTest(number, "123"  );
+        parseTest(expr  , "1+2"  );  // '+'が1個
+        parseTest(expr  , "123"  );  // '+'が0個
+        parseTest(expr  , "1+2+3");  // '+'が2個
     }
 }

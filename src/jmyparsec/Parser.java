@@ -12,15 +12,32 @@ public interface Parser<T> {
         return toString(parse(s));
     }
 
+    static boolean isCharOrString(Object obj) {
+        int len = Array.getLength(obj);
+        for (int i = 0; i < len; ++i) {
+            Object o = Array.get(obj, i);
+            if (!(o instanceof Character || o instanceof String)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     static String toString(Object obj) {
         if (obj.getClass().isArray()) {
-            StringBuilder sb = new StringBuilder();
             int len = Array.getLength(obj);
-            for (int i = 0; i < len; ++i) {
-                sb.append(i == 0 ? "[" : ",");
-                sb.append(toString(Array.get(obj, i)));
+            StringBuilder sb = new StringBuilder();
+            if (isCharOrString(obj)) {
+                for (int i = 0; i < len; ++i) {
+                    sb.append(Array.get(obj, i));
+                }
+            } else {
+                for (int i = 0; i < len; ++i) {
+                    sb.append(i == 0 ? "[" : ",");
+                    sb.append(toString(Array.get(obj, i)));
+                }
+                sb.append("]");
             }
-            sb.append("]");
             return sb.toString();
         } else if (obj instanceof List) {
             return toString(((List) obj).toArray());
