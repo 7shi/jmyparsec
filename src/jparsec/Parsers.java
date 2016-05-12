@@ -60,4 +60,17 @@ public class Parsers {
             return sb.toString();
         };
     }
+
+    public static final Parser<String> many(Parser p) {
+        return s -> {
+            StringBuilder sb = new StringBuilder();
+            try {
+                for (;;) {
+                    sb.append(p.parse(s));
+                }
+            } catch (Exception e) {
+            }
+            return sb.toString();
+        };
+    }
 }

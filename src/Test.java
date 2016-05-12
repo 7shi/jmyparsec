@@ -4,12 +4,10 @@ import static jparsec.Parsers.*;
 
 public class Test {
 
-    static final Parser<String> test3 = sequence(letter, replicate(2, digit));
+    static final Parser<String> test4 = many(alpha);
 
     public static void main(String[] args) {
-        parseTest(test3, "abc");  // NG
-        parseTest(test3, "123");  // NG
-        parseTest(test3, "a23");
-        parseTest(test3, "a234");
+        parseTest(test4, "abc123");
+        parseTest(test4, "123abc");
     }
 }
