@@ -85,8 +85,18 @@ public class Parsers {
         };
     }
 
-    public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
-        return p1.or(p2);
+    public static final <T> Parser<T> or(Parser<T>... ps) {
+        return s -> {
+            Exception ex = new Exception("empty or");
+            for (Parser<T> p : ps) {
+                try {
+                    return p.parse(s);
+                } catch (Exception e) {
+                    ex = e;
+                }
+            }
+            throw ex;
+        };
     }
 
     public static final <T> Parser<T> tryp(Parser<T> p) {
