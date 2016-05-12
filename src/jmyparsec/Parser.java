@@ -66,4 +66,19 @@ public interface Parser<T> {
             throw new Exception(s.ex(e));
         });
     }
+
+    default Parser<T> prev(Parser p) {
+        return s -> {
+            T ret = parse(s);
+            p.parse(s);
+            return ret;
+        };
+    }
+
+    default <TR> Parser<TR> next(Parser<TR> p) {
+        return s -> {
+            parse(s);
+            return p.parse(s);
+        };
+    }
 }
