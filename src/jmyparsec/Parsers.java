@@ -89,4 +89,18 @@ public class Parsers {
             return ret;
         };
     }
+
+    public static final <T> Parser<T> tryp(Parser<T> p) {
+        return s -> {
+            T ret;
+            Source bak = s.clone();
+            try {
+                ret = p.parse(s);
+            } catch (Exception e) {
+                s.revert(bak);
+                throw e;
+            }
+            return ret;
+        };
+    }
 }

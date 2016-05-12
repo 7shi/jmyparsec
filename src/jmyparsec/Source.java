@@ -35,4 +35,11 @@ public class Source {
     public final void next() {
         ++pos;
     }
+
+    public final void revert(Source src) throws Exception {
+        if (!s.equals(src.s)) {
+            throw new Exception("can not revert");
+        }
+        pos = src.pos;
+    }
 }
