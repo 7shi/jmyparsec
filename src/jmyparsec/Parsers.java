@@ -74,6 +74,10 @@ public class Parsers {
         };
     }
 
+    public static final Parser<String> many1(Parser p) {
+        return sequence(p, many(p));
+    }
+
     public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
         return p1.or(p2);
     }
