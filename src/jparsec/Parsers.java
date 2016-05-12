@@ -1,4 +1,4 @@
-package JParsec;
+package jparsec;
 
 import java.util.function.Function;
 
