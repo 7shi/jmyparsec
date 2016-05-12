@@ -13,7 +13,7 @@ public class Parsers {
         }
     }
 
-    public static final Parser<Character> anyChar = satisfy(s -> true);  // 変更
+    public static final Parser<Character> anyChar = satisfy(s -> true);
 
     public static final Parser<Character> satisfy(Function<Character, Boolean> f) {
         return s -> {
@@ -77,11 +77,11 @@ public class Parsers {
     public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
         return s -> {
             T ret;
-            Source bak = s.clone();    // 追加
+            Source bak = s.clone();
             try {
                 ret = p1.parse(s);
             } catch (Exception e) {
-                if (!s.equals(bak)) {  // 追加
+                if (!s.equals(bak)) {
                     throw e;
                 }
                 ret = p2.parse(s);
