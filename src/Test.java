@@ -9,16 +9,24 @@ public class Test {
         return Integer.parseInt(many1(digit).parseToString(s));
     };
 
-    static final Parser<Integer> expr = s -> {  // 戻り値の型 -> Integer
+    static final Parser<Integer> expr = s -> {
         int x = number.parse(s);
-        List<Integer> xs = many(char1('+').next(number)).parse(s);
-        return xs.stream().reduce(x, Integer::sum);  // 合計
+        List<Integer> xs = many(or(            // or
+                char1('+').next(number),       // 足し算
+                ss -> {                        // 引き算
+                    char1('-').parse(ss);
+                    return -number.parse(ss);  // マイナスの項
+                }
+        )).parse(s);
+        return xs.stream().reduce(x, Integer::sum);
     };
 
     public static void main(String[] args) {
         parseTest(number, "123"  );
-        parseTest(expr  , "1+2"  );  // OK
-        parseTest(expr  , "123"  );  // OK
-        parseTest(expr  , "1+2+3");  // OK
+        parseTest(expr  , "1+2"  );
+        parseTest(expr  , "123"  );
+        parseTest(expr  , "1+2+3");
+        parseTest(expr  , "1-2-3");  // OK
+        parseTest(expr  , "1-2+3");  // OK
     }
 }
