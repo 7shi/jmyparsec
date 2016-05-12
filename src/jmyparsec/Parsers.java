@@ -117,4 +117,8 @@ public class Parsers {
             throw new Exception(s.ex(e));
         };
     }
+
+    public static final <T1, T2> Parser<T1> apply(Function<T2, T1> f, Parser<T2> p) {
+        return s -> f.apply(p.parse(s));
+    }
 }
