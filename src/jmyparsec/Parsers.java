@@ -27,19 +27,19 @@ public class Parsers {
     }
 
     public static final Parser<Character> char1(char ch) {
-        return or(satisfy(c -> c == ch), left("not char '" + ch + "'"));
+        return satisfy(c -> c == ch).left("not char '" + ch + "'");
     }
 
     public static final boolean isAlphaNum(char ch) {
         return Character.isAlphabetic(ch) || Character.isDigit(ch);
     }
 
-    public static final Parser<Character> digit    = or(satisfy(Character::isDigit)     , left("not digit"   ));
-    public static final Parser<Character> upper    = or(satisfy(Character::isUpperCase) , left("not upper"   ));
-    public static final Parser<Character> lower    = or(satisfy(Character::isLowerCase) , left("not lower"   ));
-    public static final Parser<Character> alpha    = or(satisfy(Character::isAlphabetic), left("not alpha"   ));
-    public static final Parser<Character> alphaNum = or(satisfy(Parsers  ::isAlphaNum)  , left("not alphaNum"));
-    public static final Parser<Character> letter   = or(satisfy(Character::isLetter)    , left("not letter"  ));
+    public static final Parser<Character> digit    = satisfy(Character::isDigit     ).left("not digit"   );
+    public static final Parser<Character> upper    = satisfy(Character::isUpperCase ).left("not upper"   );
+    public static final Parser<Character> lower    = satisfy(Character::isLowerCase ).left("not lower"   );
+    public static final Parser<Character> alpha    = satisfy(Character::isAlphabetic).left("not alpha"   );
+    public static final Parser<Character> alphaNum = satisfy(Parsers  ::isAlphaNum  ).left("not alphaNum");
+    public static final Parser<Character> letter   = satisfy(Character::isLetter    ).left("not letter"  );
 
     public static final Parser<String> sequence(Parser... args) {
         return s -> {
@@ -75,19 +75,7 @@ public class Parsers {
     }
 
     public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
-        return s -> {
-            T ret;
-            Source bak = s.clone();
-            try {
-                ret = p1.parse(s);
-            } catch (Exception e) {
-                if (!s.equals(bak)) {
-                    throw e;
-                }
-                ret = p2.parse(s);
-            }
-            return ret;
-        };
+        return p1.or(p2);
     }
 
     public static final <T> Parser<T> tryp(Parser<T> p) {
@@ -107,7 +95,7 @@ public class Parsers {
     public static final Parser<String> string(String str) {
         return s -> {
             for (int i = 0; i < str.length(); ++i) {
-                or(char1(str.charAt(i)), left("not string \"" + str + "\"")).parse(s);
+                char1(str.charAt(i)).left("not string \"" + str + "\"").parse(s);
             }
             return str;
         };

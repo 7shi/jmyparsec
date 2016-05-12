@@ -11,10 +11,10 @@ public class Test {
     static final Parser<String> test1 = sequence(anyChar, anyChar);
     static final Parser<String> test2 = sequence(test1, anyChar);
     static final Parser<String> test3 = sequence(letter, replicate(2, digit));
-    static final Parser<Character> test5 = or(letter, digit);
-    static final Parser<String> test7 = or(sequence(a, b), sequence(c, b));
-    static final Parser<String> test8 = or(sequence(a, b), sequence(a, c));
-    static final Parser<String> test11 = or(string("ab"), string("ac"));
+    static final Parser<Character> test5 = letter.or(digit);
+    static final Parser<String> test7 = sequence(a, b).or(sequence(c, b));
+    static final Parser<String> test8 = sequence(a, b).or(sequence(a, c));
+    static final Parser<String> test11 = string("ab").or(string("ac"));
 
     public static void main(String[] args) {
         parseTest(test2     , "12" );  // NG
