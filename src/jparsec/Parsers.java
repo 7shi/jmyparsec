@@ -40,4 +40,14 @@ public class Parsers {
     public static final Parser<Character> alpha = satisfy(Character::isAlphabetic);
     public static final Parser<Character> alphaNum = satisfy(Parsers::isAlphaNum);
     public static final Parser<Character> letter = satisfy(Character::isLetter);
+
+    public static final Parser<String> sequence(Parser... args) {
+        return s -> {
+            StringBuilder sb = new StringBuilder();
+            for (Parser arg : args) {
+                sb.append(arg.parse(s));
+            }
+            return sb.toString();
+        };
+    }
 }
