@@ -121,4 +121,8 @@ public class Parsers {
     public static final <T1, T2> Parser<T1> apply(Function<T2, T1> f, Parser<T2> p) {
         return s -> f.apply(p.parse(s));
     }
+    
+    public static final Parser<Integer> neg(Parser<Integer> p) {
+        return apply(x -> -x, p);
+    }
 }
