@@ -51,6 +51,10 @@ public class Source {
     }
 
     public final String ex(String e) {
-        return "[line " + line + ",col " + col + "] " + e;
+        String ret = "[line " + line + ",col " + col + "] " + e;
+        if (s != null && 0 <= pos && pos < s.length()) {
+            ret += ": '" + s.charAt(pos) + "'";
+        }
+        return ret;
     }
 }
