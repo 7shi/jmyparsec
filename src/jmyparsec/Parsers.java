@@ -27,19 +27,19 @@ public class Parsers {
     }
 
     public static final Parser<Character> char1(char ch) {
-        return satisfy(c -> c == ch);
+        return or(satisfy(c -> c == ch), left("not char '" + ch + "'"));
     }
 
     public static final boolean isAlphaNum(char ch) {
         return Character.isAlphabetic(ch) || Character.isDigit(ch);
     }
 
-    public static final Parser<Character> digit = satisfy(Character::isDigit);
-    public static final Parser<Character> upper = satisfy(Character::isUpperCase);
-    public static final Parser<Character> lower = satisfy(Character::isLowerCase);
-    public static final Parser<Character> alpha = satisfy(Character::isAlphabetic);
-    public static final Parser<Character> alphaNum = satisfy(Parsers::isAlphaNum);
-    public static final Parser<Character> letter = satisfy(Character::isLetter);
+    public static final Parser<Character> digit    = or(satisfy(Character::isDigit)     , left("not digit"   ));
+    public static final Parser<Character> upper    = or(satisfy(Character::isUpperCase) , left("not upper"   ));
+    public static final Parser<Character> lower    = or(satisfy(Character::isLowerCase) , left("not lower"   ));
+    public static final Parser<Character> alpha    = or(satisfy(Character::isAlphabetic), left("not alpha"   ));
+    public static final Parser<Character> alphaNum = or(satisfy(Parsers  ::isAlphaNum)  , left("not alphaNum"));
+    public static final Parser<Character> letter   = or(satisfy(Character::isLetter)    , left("not letter"  ));
 
     public static final Parser<String> sequence(Parser... args) {
         return s -> {
@@ -107,9 +107,15 @@ public class Parsers {
     public static final Parser<String> string(String str) {
         return s -> {
             for (int i = 0; i < str.length(); ++i) {
-                char1(str.charAt(i)).parse(s);
+                or(char1(str.charAt(i)), left("not string \"" + str + "\"")).parse(s);
             }
             return str;
+        };
+    }
+
+    public static final <T> Parser<T> left(String e) {
+        return s -> {
+            throw new Exception(s.ex(e));
         };
     }
 }
