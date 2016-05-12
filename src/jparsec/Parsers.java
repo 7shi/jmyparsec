@@ -77,9 +77,13 @@ public class Parsers {
     public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
         return s -> {
             T ret;
+            Source bak = s.clone();    // 追加
             try {
                 ret = p1.parse(s);
             } catch (Exception e) {
+                if (!s.equals(bak)) {  // 追加
+                    throw e;
+                }
                 ret = p2.parse(s);
             }
             return ret;
