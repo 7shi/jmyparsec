@@ -19,7 +19,7 @@ public class Parsers {
         return s -> {
             char ch = s.peek();
             if (!f.apply(ch)) {
-                throw new Exception("not satisfy");
+                throw new Exception(s.ex("not satisfy"));
             }
             s.next();
             return ch;
