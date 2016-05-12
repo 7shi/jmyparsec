@@ -73,4 +73,16 @@ public class Parsers {
             return sb.toString();
         };
     }
+
+    public static final <T> Parser<T> or(Parser<T> p1, Parser<T> p2) {
+        return s -> {
+            T ret;
+            try {
+                ret = p1.parse(s);
+            } catch (Exception e) {
+                ret = p2.parse(s);
+            }
+            return ret;
+        };
+    }
 }
