@@ -1,31 +1,13 @@
 package jmyparsec;
 
-import java.lang.reflect.Array;
-import java.util.List;
 import java.util.function.Function;
 
 public class Parsers {
-    
-    public static final String toString(Object obj) {
-        if (obj.getClass().isArray()) {
-            StringBuilder sb = new StringBuilder();
-            int len = Array.getLength(obj);
-            for (int i = 0; i < len; ++i) {
-                sb.append(i == 0 ? "[" : ",");
-                sb.append(toString(Array.get(obj, i)));
-            }
-            sb.append("]");
-            return sb.toString();
-        } else if (obj instanceof List) {
-            return toString(((List) obj).toArray());
-        }
-        return obj.toString();
-    }
 
     public static final <T> void parseTest(Parser<T> p, String src) {
         Source s = new Source(src);
         try {
-            System.out.println(toString(p.parse(s)));
+            System.out.println(p.parseToString(s));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
