@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 public class Parsers {
 
-    public static <T> void parseTest(Parser<T> p, String src) {
+    public static void parseTest(Parser p, String src) {
         Source s = new Source(src);
         try {
             System.out.println(p.parse(s));
@@ -46,6 +46,16 @@ public class Parsers {
             StringBuilder sb = new StringBuilder();
             for (Parser arg : args) {
                 sb.append(arg.parse(s));
+            }
+            return sb.toString();
+        };
+    }
+
+    public static final Parser<String> replicate(int n, Parser p) {
+        return s -> {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < n; ++i) {
+                sb.append(p.parse(s));
             }
             return sb.toString();
         };

@@ -4,7 +4,7 @@ import static jparsec.Parsers.*;
 
 public class Test {
 
-    static final Parser<String> test3 = sequence(letter, digit, digit);
+    static final Parser<String> test3 = sequence(letter, replicate(2, digit));
 
     public static void main(String[] args) {
         parseTest(test3, "abc");  // NG

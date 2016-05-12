@@ -9,7 +9,7 @@ public class Source {
         this.s = s;
     }
 
-    public final char peek() throws Exception {  // 例外対応
+    public final char peek() throws Exception {
         if (pos >= s.length()) {
             throw new Exception("too short");
         }
