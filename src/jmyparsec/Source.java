@@ -1,4 +1,4 @@
-package jparsec;
+package jmyparsec;
 
 public class Source {
 

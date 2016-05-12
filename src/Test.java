@@ -1,6 +1,6 @@
 
-import jparsec.*;
-import static jparsec.Parsers.*;
+import jmyparsec.*;
+import static jmyparsec.Parsers.*;
 
 public class Test {
 
