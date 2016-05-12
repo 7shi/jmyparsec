@@ -103,4 +103,13 @@ public class Parsers {
             return ret;
         };
     }
+
+    public static final Parser<String> string(String str) {
+        return s -> {
+            for (int i = 0; i < str.length(); ++i) {
+                char1(str.charAt(i)).parse(s);
+            }
+            return str;
+        };
+    }
 }
