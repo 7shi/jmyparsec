@@ -18,28 +18,36 @@ public class Test {
         return x;
     }
 
-    static final Parser<Integer> expr = s -> {
+    static final Parser<Integer> term = s -> {  // 項の計算、exprと同じ構造
         int x = number.parse(s);
         Parser<List<Function<Integer, Integer>>> fs = many(or(
             ss -> {
-                char1('+').parse(ss);
-                int y = number.parse(ss);   // キャプチャされる変数
-                return z -> z + y;          // クロージャを返す
-            }, ss -> {
-                char1('-').parse(ss);
-                int y = number.parse(ss);   // キャプチャされる変数
-                return z -> z - y;          // クロージャを返す
-            }, ss -> {                      // 追加: 掛け算
                 char1('*').parse(ss);
-                int y = number.parse(ss);   // キャプチャされる変数
-                return z -> z * y;          // クロージャを返す
-            }, ss -> {                      // 追加: 割り算
+                int y = number.parse(ss);
+                return z -> z * y;
+            }, ss -> {
                 char1('/').parse(ss);
-                int y = number.parse(ss);   // キャプチャされる変数
-                return z -> z / y;          // クロージャを返す
+                int y = number.parse(ss);
+                return z -> z / y;
             }
         ));
-        return accumulate(x, fs.parse(s));  // まとめて計算
+        return accumulate(x, fs.parse(s));
+    };
+
+    static final Parser<Integer> expr = s -> {
+        int x = term.parse(s);           // 項を取得
+        Parser<List<Function<Integer, Integer>>> fs = many(or(
+            ss -> {
+                char1('+').parse(ss);
+                int y = term.parse(ss);  // 項を取得
+                return z -> z + y;
+            }, ss -> {
+                char1('-').parse(ss);
+                int y = term.parse(ss);  // 項を取得
+                return z -> z - y;
+            }
+        ));
+        return accumulate(x, fs.parse(s));
     };
 
     public static void main(String[] args) {
@@ -49,8 +57,8 @@ public class Test {
         parseTest(expr  , "1+2+3"   );
         parseTest(expr  , "1-2-3"   );
         parseTest(expr  , "1-2+3"   );
-        parseTest(expr  , "2*3+4"   );  // OK
-        parseTest(expr  , "2+3*4"   );  // NG
-        parseTest(expr  , "100/10/2");  // OK
+        parseTest(expr  , "2*3+4"   );
+        parseTest(expr  , "2+3*4"   );  // OK
+        parseTest(expr  , "100/10/2");
     }
 }
