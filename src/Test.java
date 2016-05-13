@@ -21,13 +21,8 @@ public class Test {
     static final Parser<Integer> term = s -> {
         int x = number.parse(s);
         Parser<List<Function<Integer, Integer>>> fs = many(or(
-            ss -> {
-                char1('*').parse(ss);
-                return apply((y, z) -> z * y, number).parse(ss);  // 適用
-            }, ss -> {
-                char1('/').parse(ss);
-                return apply((y, z) -> z / y, number).parse(ss);  // 適用
-            }
+            char1('*').next(apply((y, z) -> z * y, number)),  // 修正
+            char1('/').next(apply((y, z) -> z / y, number))   // 修正
         ));
         return accumulate(x, fs.parse(s));
     };
@@ -35,13 +30,8 @@ public class Test {
     static final Parser<Integer> expr = s -> {
         int x = term.parse(s);           // 項を取得
         Parser<List<Function<Integer, Integer>>> fs = many(or(
-            ss -> {
-                char1('+').parse(ss);
-                return apply((y, z) -> z + y, term).parse(ss);    // 適用
-            }, ss -> {
-                char1('-').parse(ss);
-                return apply((y, z) -> z - y, term).parse(ss);    // 適用
-            }
+            char1('+').next(apply((y, z) -> z + y, term)),    // 修正
+            char1('-').next(apply((y, z) -> z - y, term))     // 修正
         ));
         return accumulate(x, fs.parse(s));
     };
