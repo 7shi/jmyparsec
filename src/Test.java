@@ -17,24 +17,23 @@ public class Test {
         }
         return x;
     }
+    
+    static final <T> Parser<T> eval(Parser<T> m, Parser<List<Function<T, T>>> fs) {
+        return s -> {
+            T x = m.parse(s);
+            return accumulate(x, fs.parse(s));
+        };
+    }
 
-    static final Parser<Integer> term = s -> {
-        int x = number.parse(s);
-        Parser<List<Function<Integer, Integer>>> fs = many(or(
-            char1('*').next(apply((y, z) -> z * y, number)),  // 修正
-            char1('/').next(apply((y, z) -> z / y, number))   // 修正
-        ));
-        return accumulate(x, fs.parse(s));
-    };
+    static final Parser<Integer> term = Test.<Integer>eval(number, many(or(
+            char1('*').next(apply((y, z) -> z * y, number)),
+            char1('/').next(apply((y, z) -> z / y, number))
+    )));
 
-    static final Parser<Integer> expr = s -> {
-        int x = term.parse(s);           // 項を取得
-        Parser<List<Function<Integer, Integer>>> fs = many(or(
-            char1('+').next(apply((y, z) -> z + y, term)),    // 修正
-            char1('-').next(apply((y, z) -> z - y, term))     // 修正
-        ));
-        return accumulate(x, fs.parse(s));
-    };
+    static final Parser<Integer> expr = Test.<Integer>eval(term, many(or(
+            char1('+').next(apply((y, z) -> z + y, term)),
+            char1('-').next(apply((y, z) -> z - y, term))
+    )));
 
     public static void main(String[] args) {
         parseTest(number, "123"     );
