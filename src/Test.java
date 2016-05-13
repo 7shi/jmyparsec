@@ -1,4 +1,3 @@
-
 import java.util.List;
 import java.util.function.Function;
 import jmyparsec.*;
@@ -25,15 +24,29 @@ public class Test {
         };
     }
 
-    static final Parser<Integer> term = Test.<Integer>eval(number, many(or(
-            char1('*').next(apply((y, z) -> z * y, number)),
-            char1('/').next(apply((y, z) -> z / y, number))
+    // ダミーのラッパー
+    static final Parser<Integer> factor = new Parser<Integer>() {
+        @Override
+        public Integer parse(Source s) throws Exception {
+            return factor_.parse(s);
+        }
+    };
+
+    // term = factor, {("*", factor) | ("/", factor)}
+    static final Parser<Integer> term = Test.<Integer>eval(factor, many(or(
+            char1('*').next(apply((y, z) -> z * y, factor)),
+            char1('/').next(apply((y, z) -> z / y, factor))
     )));
 
+    // expr = term, {("+", term) | ("-", term)}
     static final Parser<Integer> expr = Test.<Integer>eval(term, many(or(
             char1('+').next(apply((y, z) -> z + y, term)),
             char1('-').next(apply((y, z) -> z - y, term))
     )));
+
+    // factor = ("(", expr, ")") | number
+    static final Parser<Integer> factor_  // 実体
+            = or(char1('(').next(expr).prev(char1(')')), number);
 
     public static void main(String[] args) {
         parseTest(number, "123"     );
@@ -45,5 +58,6 @@ public class Test {
         parseTest(expr  , "2*3+4"   );
         parseTest(expr  , "2+3*4"   );
         parseTest(expr  , "100/10/2");
+        parseTest(expr  , "(2+3)*4" );  // OK
     }
 }
