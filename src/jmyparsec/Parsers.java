@@ -2,6 +2,7 @@ package jmyparsec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Parsers {
@@ -131,7 +132,14 @@ public class Parsers {
     public static final <T1, T2> Parser<T1> apply(Function<T2, T1> f, Parser<T2> p) {
         return s -> f.apply(p.parse(s));
     }
-    
+
+    public static final <T1, T2> Parser<Function<T2, T1>> apply(BiFunction<T2, T2, T1> f, Parser<T2> p) {
+        return s -> {
+            T2 x = p.parse(s);
+            return y -> f.apply(x, y);
+        };
+    }
+
     public static final Parser<Integer> neg(Parser<Integer> p) {
         return apply(x -> -x, p);
     }

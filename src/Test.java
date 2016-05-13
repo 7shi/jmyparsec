@@ -18,17 +18,15 @@ public class Test {
         return x;
     }
 
-    static final Parser<Integer> term = s -> {  // 項の計算、exprと同じ構造
+    static final Parser<Integer> term = s -> {
         int x = number.parse(s);
         Parser<List<Function<Integer, Integer>>> fs = many(or(
             ss -> {
                 char1('*').parse(ss);
-                int y = number.parse(ss);
-                return z -> z * y;
+                return apply((y, z) -> z * y, number).parse(ss);  // 適用
             }, ss -> {
                 char1('/').parse(ss);
-                int y = number.parse(ss);
-                return z -> z / y;
+                return apply((y, z) -> z / y, number).parse(ss);  // 適用
             }
         ));
         return accumulate(x, fs.parse(s));
@@ -39,12 +37,10 @@ public class Test {
         Parser<List<Function<Integer, Integer>>> fs = many(or(
             ss -> {
                 char1('+').parse(ss);
-                int y = term.parse(ss);  // 項を取得
-                return z -> z + y;
+                return apply((y, z) -> z + y, term).parse(ss);    // 適用
             }, ss -> {
                 char1('-').parse(ss);
-                int y = term.parse(ss);  // 項を取得
-                return z -> z - y;
+                return apply((y, z) -> z - y, term).parse(ss);    // 適用
             }
         ));
         return accumulate(x, fs.parse(s));
@@ -58,7 +54,7 @@ public class Test {
         parseTest(expr  , "1-2-3"   );
         parseTest(expr  , "1-2+3"   );
         parseTest(expr  , "2*3+4"   );
-        parseTest(expr  , "2+3*4"   );  // OK
+        parseTest(expr  , "2+3*4"   );
         parseTest(expr  , "100/10/2");
     }
 }
