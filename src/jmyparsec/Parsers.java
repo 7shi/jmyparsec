@@ -44,6 +44,12 @@ public class Parsers {
     public static final Parser<Character> alphaNum = satisfy(Parsers  ::isAlphaNum  ).left("not alphaNum");
     public static final Parser<Character> letter   = satisfy(Character::isLetter    ).left("not letter"  );
 
+    public static final boolean isSpace(char ch) {
+        return ch == '\t' || ch == ' ';
+    }
+    public static final Parser<Character> space = satisfy(Parsers::isSpace).left("not space");
+    public static final Parser<List<Character>> spaces = many(space);
+
     public static final Parser<String> sequence(Parser... args) {
         return s -> {
             StringBuilder sb = new StringBuilder();

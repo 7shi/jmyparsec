@@ -44,20 +44,21 @@ public class Test {
             char1('-').next(apply((y, z) -> z - y, term))
     )));
 
-    // factor = ("(", expr, ")") | number
-    static final Parser<Integer> factor_  // 実体
-            = or(char1('(').next(expr).prev(char1(')')), number);
+    // factor = factor = [spaces], ("(", expr, ")") | number, [spaces]
+    static final Parser<Integer> factor_ = spaces.next(
+            or(char1('(').next(expr).prev(char1(')')), number)
+    ).prev(spaces);
 
     public static void main(String[] args) {
-        parseTest(number, "123"     );
-        parseTest(expr  , "1+2"     );
-        parseTest(expr  , "123"     );
-        parseTest(expr  , "1+2+3"   );
-        parseTest(expr  , "1-2-3"   );
-        parseTest(expr  , "1-2+3"   );
-        parseTest(expr  , "2*3+4"   );
-        parseTest(expr  , "2+3*4"   );
-        parseTest(expr  , "100/10/2");
-        parseTest(expr  , "(2+3)*4" );  // OK
+        parseTest(number, "123"          );
+        parseTest(expr  , "1 + 2"        );
+        parseTest(expr  , "123"          );
+        parseTest(expr  , "1 + 2 + 3"    );
+        parseTest(expr  , "1 - 2 - 3"    );
+        parseTest(expr  , "1 - 2 + 3"    );
+        parseTest(expr  , "2 * 3 + 4"    );
+        parseTest(expr  , "2 + 3 * 4"    );
+        parseTest(expr  , "100 / 10 / 2" );
+        parseTest(expr  , "( 2 + 3 ) * 4");
     }
 }
